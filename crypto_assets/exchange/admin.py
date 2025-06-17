@@ -13,7 +13,6 @@ class CoinAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "enable",
         "icon",
         "icon_png",
-        "icon_background_color",
         "market",
         "get_current_usdt_price",
         "get_current_irt_price",
