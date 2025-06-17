@@ -32,7 +32,7 @@ class CoinAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
 @admin.register(models.Exchange)
 class ExchangeAdmin(ReadOnlyAdminDateFieldsMIXIN):
-    list_display = ("pk", "name")
+    list_display = ("pk", "name", "created_at", "updated_at")
 
 
 @admin.register(models.Transaction)
