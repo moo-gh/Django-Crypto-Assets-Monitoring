@@ -30,7 +30,7 @@ class Channel(BaseModel):
         return f"({self.pk} - {self.name})"
 
 
-class TelegramAccount(models.Model):
+class TelegramAccount(BaseModel):
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name="telegram_accounts"
     )
