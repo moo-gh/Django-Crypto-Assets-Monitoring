@@ -5,7 +5,7 @@ from reusable.admins import ReadOnlyAdminDateFieldsMIXIN
 
 
 @admin.register(models.Notification)
-class NotificationAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class NotificationAdmin(ReadOnlyAdminDateFieldsMIXIN):
     raw_id_fields = ("transaction",)
     readonly_fields = ("last_sent",)
     ordering = ("-last_sent",)
