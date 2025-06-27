@@ -1,3 +1,12 @@
+# [1.51.0](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.50.0...v1.51.0) (2025-06-27)
+
+
+### Features
+
+* **models:** update TelegramAccount to inherit from BaseModel and add created_at, updated_at, and deleted_at fields ([36ab702](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/36ab70263fad5c90fab7cc9786c2473a62c53ec1))
+
+
+
 # [1.50.0](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.49.0...v1.50.0) (2025-05-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **api:** update date format in TransactionSerializer and remove deprecated function-based view for transactions ([a493d22](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/a493d2280403812102922abec8f891676d4c44a5))
-
-
-
-# [1.47.0](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.46.0...v1.47.0) (2025-05-22)
-
-
-### Features
-
-* **api:** add date field to TransactionSerializer for improved transaction data representation ([3ac26bb](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/3ac26bb7891dac9adf4bda73108d3c31e407dece))
 
 
 
