@@ -19,7 +19,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.TelegramAccount)
-class TelegramAccountAdmin(admin.ModelAdmin):
+class TelegramAccountAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = ("pk", "profile", "chat_id")
 
 
