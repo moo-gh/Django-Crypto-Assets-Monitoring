@@ -5,8 +5,8 @@ from django.db import models
 from django.core.validators import MinValueValidator
 
 from user.models import Profile
-from exchange.models import Coin, Transaction
 from reusable.models import BaseModel
+from exchange.models import Coin, Transaction
 
 
 class Telegram(BaseModel):
