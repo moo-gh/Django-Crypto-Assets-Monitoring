@@ -1,11 +1,11 @@
 import logging
-from django.core.cache import cache
 from decimal import Decimal
-from rest_framework import viewsets
+
+from django.core.cache import cache
+from rest_framework import viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
 
 from .models import Coin, Transaction
 from .serializers import TransactionSerializer, CachedPricesSerializer, CoinSerializer
@@ -31,11 +31,9 @@ def format_number(value):
     # Check if it's a whole number
     if value % 1 == 0:
         return int(value)
-    else:
-        # Convert to string, remove trailing zeros, convert back to float
-        return float(
-            str(value).rstrip("0").rstrip(".") if "." in str(value) else str(value)
-        )
+    return float(
+        str(value).rstrip("0").rstrip(".") if "." in str(value) else str(value)
+    )
 
 
 class CachedPricesViewSet(viewsets.ReadOnlyModelViewSet):
@@ -69,7 +67,9 @@ class CachedPricesViewSet(viewsets.ReadOnlyModelViewSet):
             logger.info(f"Checking key: {key}, found price: {price}")
 
             if not price:
-                # If not found, check for market-specific keys (format used by update_bitpin_prices task)
+                # If not found,
+                # check for market-specific keys
+                # (format used by update_bitpin_prices task)
                 for market in ["irt", "usdt"]:
                     key = f"coin_{coin.code}_{market}".lower()
                     price = cache.get(key)
@@ -78,8 +78,12 @@ class CachedPricesViewSet(viewsets.ReadOnlyModelViewSet):
                     if price:
                         break
 
-            icon_svg_url = request.build_absolute_uri(coin.icon.url) if coin.icon else None
-            icon_png_url = request.build_absolute_uri(coin.icon_png.url) if coin.icon_png else None
+            icon_svg_url = (
+                request.build_absolute_uri(coin.icon.url) if coin.icon else None
+            )
+            icon_png_url = (
+                request.build_absolute_uri(coin.icon_png.url) if coin.icon_png else None
+            )
             # Create coin data object
             coin_data = {
                 "code": coin.code,

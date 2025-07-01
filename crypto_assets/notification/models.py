@@ -6,7 +6,7 @@ from django.core.validators import MinValueValidator
 
 from user.models import Profile
 from reusable.models import BaseModel
-from exchange.models import Coin, Transaction
+from exchange.models import Coin, Transaction, MarketChoices
 
 
 class Telegram(BaseModel):
@@ -26,7 +26,7 @@ class Notification(BaseModel):
         blank=True,
     )
     market = models.CharField(
-        max_length=10, choices=Transaction.MARKET_CHOICES, null=True, blank=True
+        max_length=10, choices=MarketChoices.choices, null=True, blank=True
     )
 
     profile = models.ForeignKey(

@@ -1,16 +1,22 @@
 from django.db import models, transaction
-from django_jalali.db import models as jmodels
 from django.utils.functional import cached_property
+from django_jalali.db import models as jmodels
 
-from . import tasks
 from user.models import Profile
+from reusable.models import BaseModel
+from . import tasks
 from .platforms.bitpin import Bitpin
 from .platforms.wallex import Wallex
-from reusable.models import BaseModel
+
 
 class ExchangeNameChoices(models.TextChoices):
     WALLEX = "wallex", "wallex"
     BITPIN = "bitpin", "bitpin"
+
+
+class MarketChoices(models.TextChoices):
+    TOMAN = "irt", "irt"
+    TETHER = "usdt", "usdt"
 
 
 class Exchange(BaseModel):
@@ -56,11 +62,8 @@ class Coin(BaseModel):
         help_text="Background color for SVG icons in hex format (e.g. #FFFFFF)",
     )
 
-    TOMAN = "irt"
-    TETHER = "usdt"
-    MARKET_CHOICES = ((TOMAN, TOMAN), (TETHER, TETHER))
     market = models.CharField(
-        max_length=10, choices=MARKET_CHOICES, null=True, blank=True
+        max_length=10, choices=MarketChoices.choices, null=True, blank=True
     )
 
     def __str__(self):
@@ -79,14 +82,11 @@ class Transaction(BaseModel):
     SELL = "sell"
     TYPE_CHOICES = ((BUY, BUY), (SELL, SELL))
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    TOMAN = "irt"
-    TETHER = "usdt"
-    MARKET_CHOICES = ((TOMAN, TOMAN), (TETHER, TETHER))
     jdate = jmodels.jDateTimeField(null=True, blank=True)
     price = models.DecimalField(max_digits=20, decimal_places=10)
     quantity = models.DecimalField(max_digits=20, decimal_places=10)
     market = models.CharField(
-        max_length=10, choices=MARKET_CHOICES, null=True, blank=True
+        max_length=10, choices=MarketChoices.choices, null=True, blank=True
     )
     coin = models.ForeignKey(
         Coin, related_name="transactions", on_delete=models.CASCADE
@@ -114,13 +114,13 @@ class Transaction(BaseModel):
 
     @property
     def get_price(self):
-        if self.market == Transaction.TOMAN:
+        if self.market == MarketChoices.TOMAN:
             return f"{int(self.price):,}"
         return float(round(self.price, 2))
 
     @cached_property
     def get_current_price(self):
-        if self.market == Transaction.TOMAN:
+        if self.market == MarketChoices.TOMAN:
             return f"{int(self.current_price):,}"
         return float(round(self.current_price, 2))
 
