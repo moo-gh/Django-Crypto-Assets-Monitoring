@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from .models import Transaction, Coin
-from .views import format_number
 
 
 class CoinSerializer(serializers.ModelSerializer):
@@ -94,6 +93,8 @@ class TransactionSerializer(serializers.ModelSerializer):
         return None
 
     def to_representation(self, instance):
+        from .views import format_number
+
         ret = super().to_representation(instance)
 
         # Format numeric fields
