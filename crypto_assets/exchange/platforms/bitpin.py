@@ -1,7 +1,7 @@
 import json
 import logging
-import requests
 from decimal import Decimal
+import requests
 from requests.exceptions import ReadTimeout, HTTPError, RequestException
 
 from django.core.cache import cache

@@ -2,11 +2,11 @@ import csv
 from decimal import Decimal
 from datetime import datetime
 
-from celery import shared_task
-from crypto_assets.celery import app
 from jdatetime import JalaliToGregorian
+from celery import shared_task
 from celery.utils.log import get_task_logger
 
+from crypto_assets.celery import app
 from .platforms.bitpin import Bitpin
 from . import models
 
@@ -52,7 +52,7 @@ def process_importer(importer_id):
     fail_counter = 0
     importer = models.Importer.objects.get(pk=importer_id)
     errors = importer.errors or ""
-    with open(importer.file.path, "r") as csv_file:
+    with open(importer.file.path, "r", encoding="utf-8") as csv_file:
         csv_reader = csv.reader(csv_file)
         # if "mode" in the header row.low(), it's new format
         # otherwise, it's old format
@@ -69,14 +69,14 @@ def process_importer(importer_id):
                         date,
                         market,
                         trade_type,
-                        mode,
+                        _mode,
                         amount,
                         _total,
                         price,
                         _price_limit,
                         _price_stop,
                         _price_limit_oco,
-                        fulfilled,
+                        _fulfilled,
                     ) = row
                 else:
                     date, market, trade_type, amount, _total, price, _fee = row

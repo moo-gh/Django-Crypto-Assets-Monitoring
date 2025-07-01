@@ -4,8 +4,8 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.db.models import Q
 
-from . import models, utils
 from crypto_assets.celery import app
+from . import models, utils
 
 logger = get_task_logger(__name__)
 
