@@ -8,20 +8,21 @@ from .platforms.bitpin import Bitpin
 from .platforms.wallex import Wallex
 from reusable.models import BaseModel
 
+class ExchangeNameChoices(models.TextChoices):
+    WALLEX = "wallex", "wallex"
+    BITPIN = "bitpin", "bitpin"
+
 
 class Exchange(BaseModel):
-    WALLEX = "wallex"
-    BITPIN = "bitpin"
-    NAME_CHOICES = ((WALLEX, WALLEX), (BITPIN, BITPIN))
-    name = models.CharField(max_length=100, choices=NAME_CHOICES)
+    name = models.CharField(max_length=100, choices=ExchangeNameChoices.choices)
 
     def __str__(self):
         return f"({self.pk} - {self.name})"
 
     def get_platform(self):
-        if self.name == Exchange.WALLEX:
+        if self.name == ExchangeNameChoices.WALLEX:
             return Wallex()
-        if self.name == Exchange.BITPIN:
+        if self.name == ExchangeNameChoices.BITPIN:
             return Bitpin()
         raise Exception("Exchange name is not valid")
 
