@@ -19,6 +19,11 @@ class MarketChoices(models.TextChoices):
     TETHER = "usdt", "usdt"
 
 
+class TransactionTypeChoices(models.TextChoices):
+    BUY = "buy", "buy"
+    SELL = "sell", "sell"
+
+
 class Exchange(BaseModel):
     name = models.CharField(max_length=100, choices=ExchangeNameChoices.choices)
 
@@ -78,10 +83,7 @@ class Coin(BaseModel):
 
 
 class Transaction(BaseModel):
-    BUY = "buy"
-    SELL = "sell"
-    TYPE_CHOICES = ((BUY, BUY), (SELL, SELL))
-    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    type = models.CharField(max_length=10, choices=TransactionTypeChoices.choices)
     jdate = jmodels.jDateTimeField(null=True, blank=True)
     price = models.DecimalField(max_digits=20, decimal_places=10)
     quantity = models.DecimalField(max_digits=20, decimal_places=10)
@@ -130,7 +132,7 @@ class Transaction(BaseModel):
 
     @property
     def get_profit_or_loss(self):
-        if self.type == Transaction.SELL:
+        if self.type == TransactionTypeChoices.SELL:
             return "-"
         return f"{int(self.get_current_value - self.total_price):,}"
 
@@ -144,6 +146,7 @@ class Transaction(BaseModel):
 
     @property
     def construct_platform_id(self):
+        """Construct a unique platform ID for this transaction."""
         platform_id_components = [
             str(self.jdate),
             self.coin.code,
@@ -154,9 +157,29 @@ class Transaction(BaseModel):
         ]
         return "|".join(platform_id_components).lower()
 
+    @property
+    def is_buy_transaction(self):
+        """Check if this is a buy transaction."""
+        return self.type == TransactionTypeChoices.BUY
+
+    @property
+    def is_sell_transaction(self):
+        """Check if this is a sell transaction."""
+        return self.type == TransactionTypeChoices.SELL
+
+    @property
+    def is_toman_market(self):
+        """Check if this transaction is in Toman market."""
+        return self.market == MarketChoices.TOMAN
+
+    @property
+    def is_usdt_market(self):
+        """Check if this transaction is in USDT market."""
+        return self.market == MarketChoices.TETHER
+
     @cached_property
     def get_change_percentage(self):
-        if self.type == Transaction.SELL:
+        if self.type == TransactionTypeChoices.SELL:
             return "-"
         # shows the percentage of profit or loss
         if self.total_price == 0:

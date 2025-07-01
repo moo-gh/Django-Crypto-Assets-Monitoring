@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Transaction, Coin
+from .models import Transaction, Coin, TransactionTypeChoices
 
 
 class CoinSerializer(serializers.ModelSerializer):
@@ -83,7 +83,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
     def get_change_percentage(self, obj):
-        if obj.type == Transaction.BUY:
+        if obj.type == TransactionTypeChoices.BUY:
             return obj.get_change_percentage
         return None
 
