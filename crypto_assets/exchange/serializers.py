@@ -68,7 +68,6 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        read_only_fields = fields
         fields = [
             "id",
             "type",
@@ -81,6 +80,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             "date",
             "change_percentage",
         ]
+        read_only_fields = fields
 
     def get_change_percentage(self, obj):
         if obj.type == TransactionTypeChoices.BUY:
