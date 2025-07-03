@@ -1,3 +1,13 @@
+## [1.51.1](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.51.0...v1.51.1) (2025-07-03)
+
+
+### Bug Fixes
+
+* **serializers:** restore read_only_fields in TransactionSerializer for correct field handling ([b48bed3](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/b48bed3bf5623801a7764618546b663297575aa5))
+* **serializers:** set read_only_fields in TransactionSerializer for proper field handling ([5a888c6](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/5a888c62db0f752e3b82307c24a9d5891e22fcd9))
+
+
+
 # [1.51.0](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.50.0...v1.51.0) (2025-06-27)
 
 
@@ -31,15 +41,6 @@
 ### Features
 
 * **api:** add CachedPricesViewSet and CachedPricesSerializer for retrieving cached cryptocurrency prices ([08fa6d4](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/08fa6d4d1de09061b74c8c6e93280b351d8d57c3))
-
-
-
-## [1.47.1](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.47.0...v1.47.1) (2025-05-23)
-
-
-### Bug Fixes
-
-* **api:** update date format in TransactionSerializer and remove deprecated function-based view for transactions ([a493d22](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/a493d2280403812102922abec8f891676d4c44a5))
 
 
 
