@@ -1,3 +1,12 @@
+## [1.51.2](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.51.1...v1.51.2) (2025-07-06)
+
+
+### Bug Fixes
+
+* **utils:** add missing newline at end of file in utils.py for better file formatting ([0cd9d23](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/0cd9d23cc2402087fec8776847b17b20c92dbd97))
+
+
+
 ## [1.51.1](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.51.0...v1.51.1) (2025-07-03)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * **viewset:** add filtering and ordering capabilities to TransactionViewSet for enhanced transaction data retrieval ([8bf6469](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/8bf6469dba362e258adbe982d0080e343c136b86))
-
-
-
-# [1.48.0](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/compare/v1.47.1...v1.48.0) (2025-05-24)
-
-
-### Features
-
-* **api:** add CachedPricesViewSet and CachedPricesSerializer for retrieving cached cryptocurrency prices ([08fa6d4](https://github.com/ghorbani-mohammad/Django-Crypto-Assets-Monitoring/commit/08fa6d4d1de09061b74c8c6e93280b351d8d57c3))
 
 
 
