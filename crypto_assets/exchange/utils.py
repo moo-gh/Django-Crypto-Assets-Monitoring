@@ -15,4 +15,4 @@ def format_number(value):
         return int(value)
     return float(
         str(value).rstrip("0").rstrip(".") if "." in str(value) else str(value)
-    ) 
+    )

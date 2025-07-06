@@ -19,7 +19,6 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 100
 
 
-
 class CachedPricesViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A viewset for viewing cached cryptocurrency prices.
