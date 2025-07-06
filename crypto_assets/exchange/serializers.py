@@ -93,7 +93,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         return None
 
     def to_representation(self, instance):
-        from .views import format_number
+        from .utils import format_number
 
         ret = super().to_representation(instance)
 
