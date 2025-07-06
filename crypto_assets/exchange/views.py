@@ -1,5 +1,4 @@
 import logging
-from decimal import Decimal
 
 from django.core.cache import cache
 from rest_framework import viewsets, filters
@@ -9,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Coin, Transaction
 from .serializers import TransactionSerializer, CachedPricesSerializer, CoinSerializer
+from .utils import format_number
 
 logger = logging.getLogger(__name__)
 
@@ -17,23 +17,6 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = "page_size"
     max_page_size = 100
-
-
-def format_number(value):
-    """
-    Format a number to remove trailing zeros.
-    If it's a whole number, return an integer, otherwise return a float.
-    """
-    # Convert to Decimal for precise handling
-    if isinstance(value, float) or isinstance(value, int) or isinstance(value, str):
-        value = Decimal(str(value))
-
-    # Check if it's a whole number
-    if value % 1 == 0:
-        return int(value)
-    return float(
-        str(value).rstrip("0").rstrip(".") if "." in str(value) else str(value)
-    )
 
 
 class CachedPricesViewSet(viewsets.ReadOnlyModelViewSet):
