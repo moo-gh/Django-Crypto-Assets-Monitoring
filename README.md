@@ -202,8 +202,3 @@ For support and questions:
 - **Telegram Channel**: [@eye_on_crypto](https://t.me/eye_on_crypto)
 - **Issues**: Create an issue on the repository
 - **Documentation**: Check the inline code documentation
-
----
-
-**Version**: 1.29.0  
-**Last Updated**: December 2024
