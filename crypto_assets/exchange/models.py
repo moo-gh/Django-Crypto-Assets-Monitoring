@@ -85,7 +85,7 @@ class Coin(BaseModel):
 class Transaction(BaseModel):
     type = models.CharField(max_length=10, choices=TransactionTypeChoices.choices)
     jdate = jmodels.jDateTimeField(null=True, blank=True)
-    price = models.DecimalField(max_digits=20, decimal_places=10)
+    price = models.DecimalField(max_digits=30, decimal_places=10)
     quantity = models.DecimalField(max_digits=20, decimal_places=10)
     market = models.CharField(
         max_length=10, choices=MarketChoices.choices, null=True, blank=True
