@@ -5,6 +5,7 @@ from rest_framework import viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from .filters import TransactionFilter
 
 from .models import Coin, Transaction
 from .serializers import TransactionSerializer, CachedPricesSerializer, CoinSerializer
@@ -130,7 +131,7 @@ class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TransactionSerializer
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ["coin", "coin__code"]
+    filterset_class = TransactionFilter
     ordering_fields = ["jdate", "amount", "price"]
     ordering = ["-jdate"]
 
