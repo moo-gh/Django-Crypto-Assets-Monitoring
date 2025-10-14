@@ -1,3 +1,12 @@
+# [1.54.0](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/compare/v1.53.0...v1.54.0) (2025-10-14)
+
+
+### Features
+
+* **filters:** add custom TransactionFilter for date range filtering ([621f107](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/commit/621f10740a045e08bee9caa9ef48f4ee3a383348))
+
+
+
 # [1.53.0](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/compare/v1.52.0...v1.53.0) (2025-10-14)
 
 
@@ -32,15 +41,6 @@
 
 * **serializers:** restore read_only_fields in TransactionSerializer for correct field handling ([b48bed3](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/commit/b48bed3bf5623801a7764618546b663297575aa5))
 * **serializers:** set read_only_fields in TransactionSerializer for proper field handling ([5a888c6](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/commit/5a888c62db0f752e3b82307c24a9d5891e22fcd9))
-
-
-
-# [1.51.0](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/compare/v1.50.0...v1.51.0) (2025-06-27)
-
-
-### Features
-
-* **models:** update TelegramAccount to inherit from BaseModel and add created_at, updated_at, and deleted_at fields ([36ab702](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/commit/36ab70263fad5c90fab7cc9786c2473a62c53ec1))
 
 
 
