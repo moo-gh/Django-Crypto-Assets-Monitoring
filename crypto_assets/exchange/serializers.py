@@ -64,6 +64,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     coin = serializers.CharField(source="coin.code", read_only=True)
     current_value = serializers.FloatField(source="get_current_value", read_only=True)
     change_percentage = serializers.SerializerMethodField()
+    profit_loss = serializers.SerializerMethodField()
     date = serializers.SerializerMethodField()
 
     class Meta:
@@ -79,12 +80,18 @@ class TransactionSerializer(serializers.ModelSerializer):
             "current_value",
             "date",
             "change_percentage",
+            "profit_loss",
         ]
         read_only_fields = fields
 
     def get_change_percentage(self, obj):
         if obj.type == TransactionTypeChoices.BUY:
             return obj.get_change_percentage
+        return None
+
+    def get_profit_loss(self, obj):
+        if obj.type == TransactionTypeChoices.BUY:
+            return obj.get_current_value - obj.total_price
         return None
 
     def get_date(self, obj):
@@ -104,6 +111,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             "total_price",
             "current_value",
             "change_percentage",
+            "profit_loss",
         ]:
             if ret[field] is not None:
                 ret[field] = format_number(ret[field])
