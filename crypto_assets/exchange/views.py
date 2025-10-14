@@ -156,11 +156,38 @@ class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
             buy_transactions = queryset.filter(type=TransactionTypeChoices.BUY)
 
             total_profit_loss = 0
+            coin_obj = None
+            market = None
+
             for transaction in buy_transactions:
                 profit_loss = transaction.get_current_value - transaction.total_price
                 total_profit_loss += profit_loss
 
-            coin_stats = {"total_profit_loss": format_number(total_profit_loss)}
+                # Get coin and market from first transaction
+                if coin_obj is None:
+                    coin_obj = transaction.coin
+                    market = transaction.market
+
+            # If no buy transactions, get coin from any transaction
+            if coin_obj is None and queryset.exists():
+                first_transaction = queryset.first()
+                coin_obj = first_transaction.coin
+                market = first_transaction.market
+
+            # Get current price if we have a coin
+            current_price = None
+            if coin_obj and market:
+                try:
+                    current_price = coin_obj.price(market)
+                except Exception as e:
+                    logger.error(f"Error getting price for coin {coin_obj.code}: {e}")
+
+            coin_stats = {
+                "total_profit_loss": format_number(total_profit_loss),
+                "current_price": format_number(current_price)
+                if current_price
+                else None,
+            }
 
         # Apply pagination
         page = self.paginate_queryset(queryset)
