@@ -1,3 +1,12 @@
+# [1.53.0](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/compare/v1.52.0...v1.53.0) (2025-10-14)
+
+
+### Features
+
+* **transactions:** enhance profit/loss calculation with current price retrieval ([766898a](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/commit/766898a5740cc0e9c7dcf9b161accaea1b368acd))
+
+
+
 # [1.52.0](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/compare/v1.51.2...v1.52.0) (2025-10-14)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * **models:** update TelegramAccount to inherit from BaseModel and add created_at, updated_at, and deleted_at fields ([36ab702](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/commit/36ab70263fad5c90fab7cc9786c2473a62c53ec1))
-
-
-
-# [1.50.0](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/compare/v1.49.0...v1.50.0) (2025-05-25)
-
-
-### Features
-
-* **nginx:** add media location block for serving static media files ([4dbf8fc](https://github.com/moo-gh/Django-Crypto-Assets-Monitoring/commit/4dbf8fc892fa3b19b89f799bc2fa14c0b6d6b54e))
 
 
 
