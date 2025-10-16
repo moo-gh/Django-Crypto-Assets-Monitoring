@@ -5,6 +5,7 @@ from rest_framework import viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from .filters import TransactionFilter
 
 from .models import Coin, Transaction
 from .serializers import TransactionSerializer, CachedPricesSerializer, CoinSerializer
@@ -130,12 +131,86 @@ class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TransactionSerializer
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ["coin", "coin__code"]
+    filterset_class = TransactionFilter
     ordering_fields = ["jdate", "amount", "price"]
     ordering = ["-jdate"]
 
     def get_queryset(self):
         return Transaction.objects.all().select_related("coin").order_by("-jdate")
+
+    def list(self, request, *args, **kwargs):
+        """
+        Override list method to include total profit/loss when filtering by coin.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Check if filtering by coin
+        coin_id = request.query_params.get("coin")
+        coin_code = request.query_params.get("coin__code")
+
+        # Calculate total profit/loss if coin is specified
+        coin_stats = None
+        if coin_id or coin_code:
+            from .models import TransactionTypeChoices
+
+            # Filter BUY transactions only for profit/loss calculation
+            buy_transactions = queryset.filter(type=TransactionTypeChoices.BUY)
+
+            total_profit_loss = 0
+            coin_obj = None
+            market = None
+
+            for transaction in buy_transactions:
+                profit_loss = transaction.get_current_value - transaction.total_price
+                total_profit_loss += profit_loss
+
+                # Get coin and market from first transaction
+                if coin_obj is None:
+                    coin_obj = transaction.coin
+                    market = transaction.market
+
+            # If no buy transactions, get coin from any transaction
+            if coin_obj is None and queryset.exists():
+                first_transaction = queryset.first()
+                coin_obj = first_transaction.coin
+                market = first_transaction.market
+
+            # Get current price if we have a coin
+            current_price = None
+            if coin_obj and market:
+                try:
+                    current_price = coin_obj.price(market)
+                except Exception as e:
+                    logger.error(f"Error getting price for coin {coin_obj.code}: {e}")
+
+            coin_stats = {
+                "total_profit_loss": format_number(total_profit_loss),
+                "current_price": format_number(current_price)
+                if current_price
+                else None,
+            }
+
+        # Apply pagination
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            response_data = self.get_paginated_response(serializer.data)
+
+            # Add coin stats to response if available
+            if coin_stats:
+                response_data.data["coin_stats"] = coin_stats
+
+            return response_data
+
+        # If pagination is not applied
+        serializer = self.get_serializer(queryset, many=True)
+        response_data = {"results": serializer.data}
+
+        # Add coin stats to response if available
+        if coin_stats:
+            response_data["coin_stats"] = coin_stats
+
+        return Response(response_data)
 
 
 class CoinViewSet(viewsets.ReadOnlyModelViewSet):
