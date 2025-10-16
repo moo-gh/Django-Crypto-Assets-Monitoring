@@ -46,6 +46,7 @@ class TransactionAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "market",
         "type",
         "get_date",
+        "get_gregorian_date",
         "get_price",
         "get_quantity",
         "get_total_price",
@@ -86,6 +87,12 @@ class TransactionAdmin(ReadOnlyAdminDateFieldsMIXIN):
     @admin.display(description="date", ordering="jdate")
     def get_date(self, instance):
         return instance.jdate.strftime("%Y-%m-%d %H:%M")
+
+    @admin.display(description="gregorian date")
+    def get_gregorian_date(self, instance):
+        if instance.jdate:
+            return instance.jdate.togregorian().strftime("%Y-%m-%d %H:%M")
+        return "-"
 
     @admin.display(description="change percentage")
     def get_change_percentage(self, instance):
