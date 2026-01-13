@@ -1,11 +1,16 @@
 # Stage 1: Builder
 FROM python:3.12-alpine AS builder
 
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 WORKDIR /app
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV UV_COMPILE_BYTECODE 1
+ENV UV_LINK_MODE copy
 
 # Install build dependencies
 RUN apk update && \
@@ -19,9 +24,13 @@ RUN apk update && \
     zlib-dev \
     libffi-dev
 
-# Install python dependencies
+# Install python dependencies into a virtual environment
+RUN uv venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 COPY requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install -r requirements.txt
 
 
 # Stage 2: Final
@@ -32,6 +41,7 @@ WORKDIR /app
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Install runtime dependencies
 RUN apk add --no-cache \
@@ -40,12 +50,8 @@ RUN apk add --no-cache \
     zlib \
     libffi
 
-# Copy wheels from builder
-COPY --from=builder /app/wheels /wheels
-COPY --from=builder /app/requirements.txt .
-
-# Install dependencies from wheels
-RUN pip install --no-cache-dir /wheels/*
+# Copy the virtual environment from the builder
+COPY --from=builder /opt/venv /opt/venv
 
 # Copy project files
 COPY . .
