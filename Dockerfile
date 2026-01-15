@@ -43,7 +43,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install runtime dependencies
+# Install runtime dependencies (only what's strictly necessary)
 RUN apk add --no-cache \
     libpq \
     jpeg \
@@ -53,8 +53,10 @@ RUN apk add --no-cache \
 # Copy the virtual environment from the builder
 COPY --from=builder /opt/venv /opt/venv
 
-# Copy project files
-COPY . .
+# Copy only the necessary project files
+# Instead of COPY . ., we copy specific directories/files to keep the image clean
+COPY manage.py .
+COPY crypto_assets/ ./crypto_assets/
 
 # Set the command
-CMD ["gunicorn", "--reload", "--workers=2", "--worker-tmp-dir", "/dev/shm", "--bind=0.0.0.0:80", "--chdir", "/app/crypto_assets", "crypto_assets.wsgi"]
+CMD ["gunicorn", "--workers=2", "--worker-tmp-dir", "/dev/shm", "--bind=0.0.0.0:80", "--chdir", "/app/crypto_assets", "crypto_assets.wsgi"]
