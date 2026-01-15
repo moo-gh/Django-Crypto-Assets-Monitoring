@@ -20,8 +20,6 @@ docker-compose*.yml
 Makefile
 package.json
 package-lock.json
-requirements.in
-requirements.txt
 ci/
 logs/
 *.postman_collection.json
