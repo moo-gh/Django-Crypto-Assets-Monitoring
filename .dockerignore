@@ -25,4 +25,3 @@ logs/
 *.postman_collection.json
 mng-api.sh
 crypto_assets_api_nginx.conf
-celery-beat-entrypoint.sh

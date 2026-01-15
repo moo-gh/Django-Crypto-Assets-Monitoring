@@ -54,9 +54,12 @@ RUN apk add --no-cache \
 COPY --from=builder /opt/venv /opt/venv
 
 # Copy only the necessary project files
-# Instead of COPY . ., we copy specific directories/files to keep the image clean
 COPY manage.py .
+COPY celery-beat-entrypoint.sh .
 COPY crypto_assets/ ./crypto_assets/
+
+# Make entrypoint script executable
+RUN chmod +x celery-beat-entrypoint.sh
 
 # Set the command
 CMD ["gunicorn", "--workers=2", "--worker-tmp-dir", "/dev/shm", "--bind=0.0.0.0:80", "--chdir", "/app/crypto_assets", "crypto_assets.wsgi"]
