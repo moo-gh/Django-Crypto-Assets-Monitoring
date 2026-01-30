@@ -22,6 +22,7 @@ class NotificationAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "last_sent",
         "interval",
         "updated_at",
+        "created_at",
     )
     list_filter = ("coin",)
 
