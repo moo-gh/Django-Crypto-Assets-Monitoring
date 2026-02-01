@@ -19,12 +19,14 @@ def reset_notifications_last_sent():
 
 @app.task(name="check_coin_notifications")
 def check_coin_notifications():
-    # This task will check all notifications and send a telegram message,
-    #  if the price is reached
-    # User can set a notification for a coin's price and market
-    #  and if the target hit, a telegram message will be sent
-    # User should define when the notification should be sent, at
-    #   upper or lower price
+    """
+    This task will check all notifications and send a telegram message,
+        if the price is reached
+    User can set a notification for a coin's price and market
+        and if the target hit, a telegram message will be sent
+    User should define when the notification should be sent, at
+        upper or lower price
+    """
     bot_token = settings.TELEGRAM_BOT_TOKEN
     prices = utils.get_coin_cached_prices()
     if not prices:
