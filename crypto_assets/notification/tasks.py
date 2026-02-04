@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from celery.utils.log import get_task_logger
 from django.conf import settings
@@ -15,6 +16,35 @@ def reset_notifications_last_sent():
         last_sent=None
     )
     print(f"Reset last_sent for {affected_count} notifications")
+
+
+def check_notification(notification, price) -> Optional[bool]:
+    price_repr = f"{float(price):,}"
+    message = f"{notification.coin.code}: {price_repr} {notification.market}"
+
+    send_message = False
+
+    if price > notification.price and notification.status == models.Notification.UPPER:
+        message = f"🟢 {message}"
+        if notification.interval:
+            if not notification.passed_interval:
+                return None
+        else:
+            notification.status = None
+        send_message = True
+
+    if price < notification.price and notification.status == models.Notification.LOWER:
+        message = f"🔴 {message}"
+        if notification.interval:
+            if not notification.passed_interval:
+                return None
+        else:
+            notification.status = None
+        send_message = True
+
+    if send_message:
+        return message
+    return None
 
 
 @app.task(name="check_coin_notifications")
@@ -52,35 +82,9 @@ def check_coin_notifications():
         if price is None:
             continue
 
-        price_repr = f"{float(price):,}"
-        message = f"{notification.coin.code}: {price_repr} {notification.market}"
+        message = check_notification(notification, price)
 
-        send_message = False
-
-        if (
-            price > notification.price
-            and notification.status == models.Notification.UPPER
-        ):
-            message = f"🟢 {message}"
-            if notification.interval:
-                if not notification.passed_interval:
-                    continue
-            else:
-                notification.status = None
-            send_message = True
-        if (
-            price < notification.price
-            and notification.status == models.Notification.LOWER
-        ):
-            message = f"🔴 {message}"
-            if notification.interval:
-                if not notification.passed_interval:
-                    continue
-            else:
-                notification.status = None
-            send_message = True
-
-        if not send_message:
+        if not message:
             continue
 
         # If user wants to combine notifications, add to dictionary
