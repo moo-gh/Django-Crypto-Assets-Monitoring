@@ -47,6 +47,67 @@ def check_notification(notification, price) -> Optional[bool]:
     return None
 
 
+def handle_coin_notification(
+    notification, prices, bot_token, starting_task_time, combined_messages, notifications_should_be_updated
+):
+    tg_account = notification.profile.telegram_account.chat_id
+    if not tg_account:
+        return
+
+    coin_key = f"{notification.coin.code}_{notification.market}".lower()
+    price = prices.get(coin_key)
+    if price is None:
+        return
+
+    message = check_notification(notification, price)
+
+    if not message:
+        return
+
+    # If user wants to combine notifications, add to dictionary
+    if notification.profile.combine_notifications:
+        # send to channel or directly to user
+        if notification.channel:
+            channel_id = notification.channel.channel_identifier
+            if channel_id not in combined_messages:
+                combined_messages[channel_id] = []
+            combined_messages[channel_id].append(message)
+        else:
+            if tg_account not in combined_messages:
+                combined_messages[tg_account] = []
+            combined_messages[tg_account].append(message)
+        notifications_should_be_updated.append(notification.pk)
+    else:
+        # Send separate message to channel if available
+        if notification.channel:
+            utils.send_telegram_message(
+                settings.TELEGRAM_BOT_TOKEN,
+                notification.channel.channel_identifier,
+                message,
+            )
+        else:
+            # Send message to user's telegram account immediately
+            utils.send_telegram_message(bot_token, tg_account, message)
+
+        notification.last_sent = starting_task_time
+        notification.save()
+
+
+def send_combined_coin_notifications(
+    combined_messages, notifications_should_be_updated, bot_token, starting_task_time
+):
+    # Send combined messages
+    for chat_id, messages in combined_messages.items():
+        if not messages:
+            continue
+        combined_text = "\n".join(messages)
+        utils.send_telegram_message(bot_token, chat_id, combined_text)
+    # bulk update notifications' last_sent to starting_task_time
+    models.Notification.objects.filter(id__in=notifications_should_be_updated).update(
+        last_sent=starting_task_time
+    )
+
+
 @app.task(name="check_coin_notifications")
 def check_coin_notifications():
     """
@@ -73,58 +134,17 @@ def check_coin_notifications():
     notifications_should_be_updated = []
 
     for notification in notifications:
-        tg_account = notification.profile.telegram_account.chat_id
-        if not tg_account:
-            continue
+        handle_coin_notification(
+            notification,
+            prices,
+            bot_token,
+            starting_task_time,
+            combined_messages,
+            notifications_should_be_updated,
+        )
 
-        coin_key = f"{notification.coin.code}_{notification.market}".lower()
-        price = prices.get(coin_key)
-        if price is None:
-            continue
-
-        message = check_notification(notification, price)
-
-        if not message:
-            continue
-
-        # If user wants to combine notifications, add to dictionary
-        if notification.profile.combine_notifications:
-            # send to channel or directly to user
-            if notification.channel:
-                channel_id = notification.channel.channel_identifier
-                if channel_id not in combined_messages:
-                    combined_messages[channel_id] = []
-                combined_messages[channel_id].append(message)
-            else:
-                if tg_account not in combined_messages:
-                    combined_messages[tg_account] = []
-                combined_messages[tg_account].append(message)
-            notifications_should_be_updated.append(notification.pk)
-        else:
-            # Send separate message to channel if available
-            if notification.channel:
-                utils.send_telegram_message(
-                    settings.TELEGRAM_BOT_TOKEN,
-                    notification.channel.channel_identifier,
-                    message,
-                )
-            else:
-                # Send message to user's telegram account immediately
-                if tg_account:
-                    utils.send_telegram_message(bot_token, tg_account, message)
-
-            notification.last_sent = starting_task_time
-            notification.save()
-
-    # Send combined messages
-    for chat_id, messages in combined_messages.items():
-        if not messages:
-            continue
-        combined_text = "\n".join(messages)
-        utils.send_telegram_message(bot_token, chat_id, combined_text)
-    # bulk update notifications' last_sent to starting_task_time
-    models.Notification.objects.filter(id__in=notifications_should_be_updated).update(
-        last_sent=starting_task_time
+    send_combined_coin_notifications(
+        combined_messages, notifications_should_be_updated, bot_token, starting_task_time
     )
 
 
