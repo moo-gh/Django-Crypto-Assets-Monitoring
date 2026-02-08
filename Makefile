@@ -16,7 +16,7 @@ test: test-python
 # Preparation
 
 ENV_NAME="crypto"
-PYTHON_VERSION=3.11
+PYTHON_VERSION=3.12
 CONDA_ACTIVATE=source $$(conda info --base)/etc/profile.d/conda.sh ; conda activate
 CONDA_DEACTIVATE=source $$(conda info --base)/etc/profile.d/conda.sh ; conda deactivate
 

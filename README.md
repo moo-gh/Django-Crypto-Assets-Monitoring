@@ -41,7 +41,7 @@ A comprehensive Django-based cryptocurrency asset management and notification sy
 
 ### Prerequisites
 - Docker and Docker Compose
-- Python 3.11+
+- Python 3.12+
 - PostgreSQL
 - Redis
 
