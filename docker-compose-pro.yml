@@ -1,7 +1,4 @@
-version: '3'
-
 services:
-
   crypto_assets_db:
     container_name: crypto_assets_db
     image: postgres:13.5
