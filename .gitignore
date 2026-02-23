@@ -3,7 +3,6 @@
 *.pot
 *.pyc
 __pycache__/
-local_settings.py
 .idea
 .vscode
 .env
@@ -14,7 +13,6 @@ logs
 crypto_assets/static
 *.sql
 *.sql.gz
-todo
 crypto_assets/celerybeat-schedule
 crypto_assets/celerybeat.pid
 crypto_assets_db
