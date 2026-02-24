@@ -2,12 +2,11 @@
 *.log
 *.pot
 *.pyc
-__pycache__/
 .idea
 .vscode
 .env
 venv
-db.sqlite3
+__pycache__
 static
 logs
 crypto_assets/static
