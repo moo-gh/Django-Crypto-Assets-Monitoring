@@ -20,7 +20,7 @@ def reset_notifications_last_sent():
 
 def check_notification(notification, price) -> Optional[bool]:
     price_repr = f"{float(price):,}"
-    message = f"{notification.coin.code}: {price_repr} {notification.market}"
+    message = f"{notification.coin.code}: {price_repr} {notification.market.upper()}"
 
     send_message = False
 
