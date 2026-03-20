@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 PROJECT_NAME='crypto_assets'
 SERVER_NAME='DigitalOcean'
