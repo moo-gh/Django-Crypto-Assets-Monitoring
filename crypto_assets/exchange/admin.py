@@ -16,8 +16,6 @@ class CoinAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "market",
         "get_current_usdt_price",
         "get_current_irt_price",
-        "created_at",
-        "updated_at",
     )
     list_filter = ("enable",)
 
