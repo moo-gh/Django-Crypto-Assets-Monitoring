@@ -30,6 +30,4 @@ class ChannelAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "name",
         "profile",
         "channel_identifier",
-        "created_at",
-        "updated_at",
     )
